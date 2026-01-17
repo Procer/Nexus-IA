@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, JSON, DECIMAL, Text, LargeBinary, Enum as SQLEnum
+from sqlalchemy import Column, Integer, String, ForeignKey, JSON, DECIMAL, Text, LargeBinary, Enum as SQLEnum, DateTime
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 import enum
+from datetime import datetime
 
 class StatusIA(str, enum.Enum):
     validated = "validated"
@@ -48,6 +49,8 @@ class Comprobante(Base):
     client_id = Column(Integer, ForeignKey("clientes.id"))
     total_amount = Column(DECIMAL(15, 2))
     file_hash = Column(String(64), unique=True)
+    file_path = Column(String(512))
+    created_at = Column(DateTime, default=datetime.utcnow)
     status_ia = Column(SQLEnum(StatusIA))
 
     cliente = relationship("Cliente", back_populates="comprobantes")
